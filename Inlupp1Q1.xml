@@ -1,0 +1,7 @@
+ element Resultat{
+  for $x in //Film/Produktionsbolag
+  let $s := $x/parent::Film/Skådis/@Namn,
+      $r := $x/parent::Film/Regissör/@Namn
+  group by $x
+  return <Produktionsbolag namn = "{$x}" antal = "{count(distinct-values(($r, $s)))}"/>
+}

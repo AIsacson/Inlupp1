@@ -1,0 +1,8 @@
+element Resultat {
+  for $x in //Film
+  let $land :=  for $s in $x/Skådis/@Land
+                group by $s
+                return <Land namn = "{$s}" antalskådisar="{count($x/Skådis[@Land = $s])}"/>
+  order by $x/@Titel    
+  return element Film{attribute titel {$x/@Titel}, $land}
+}
