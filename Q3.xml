@@ -1,0 +1,11 @@
+element Resultat {
+  for $r in //Regissör[not(@Namn = preceding::Regissör/@Namn)]
+  let $str := (for $s in //Film[$r]/Skådis[not(@Namn = following::Skådis/@Namn)]
+               where (let $x := count(//Film/Regissör[@Namn = $r/@Namn]/../Skådis[@Namn = $s/@Namn])
+                      return $x) > 1
+               order by $s/@Namn
+               return <Skådis Namn="{$s/@Namn}" Land="{$s/@Land}"></Skådis>)
+  where every $r in $r satisfies count($str) > 0
+  order by $r/@Namn
+  return element Regissör{attribute Namn{$r/@Namn}, attribute Födelseår{$r/@Födelseår}, attribute Land{$r/@Land}, $str}
+}
